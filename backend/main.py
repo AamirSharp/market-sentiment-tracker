@@ -1,10 +1,13 @@
-from flask import Flask, jsonify
+from fastapi import FastAPI
+from backend.database import SessionLocal
+from backend.models import Base
+from backend.database import engine
 
-app = Flask(__name__)
+app = FastAPI()
 
-@app.route("/")
-def home():
-    return jsonify({"message": "Welcome to Market Sentiment Tracker API"})
+# Create tables if not exist
+Base.metadata.create_all(bind=engine)
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.get("/")
+def read_root():
+    return {"message": "Market Sentiment Tracker backend is live!"}
